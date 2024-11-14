@@ -2,7 +2,9 @@
   const z1_button = document.getElementById("z1");
   const z2_button = document.getElementById("z2");
   const z3_button = document.getElementById("z3");
+  const z4_button = document.getElementById("z4");
   const api_input = document.getElementById("api_key");
+  const apigif_input = document.getElementById("api_key_gif");
   const page_input = document.getElementById("station_page");
   const limit_input = document.getElementById("station_limit");
   const answer = document.getElementById("answer");
@@ -108,6 +110,18 @@
         }
         table += `</table>`;
         answer.innerHTML = table;
+      });
+  });
+  z4_button.addEventListener("click", function () {
+    fetch(
+      `https://api.giphy.com/v1/gifs/random?api_key=${apigif_input.value}&rating=g`,
+    )
+      .then((response) => response.json())
+      .then((array) => {
+        console.log(array);
+        answer.innerHTML += `
+      <img src="${array.data.images.original.url}" />
+      `;
       });
   });
 })();
