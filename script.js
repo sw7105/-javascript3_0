@@ -1,6 +1,7 @@
 (function () {
   const z1_button = document.getElementById("z1");
   const z2_button = document.getElementById("z2");
+  const z3_button = document.getElementById("z3");
   const api_input = document.getElementById("api_key");
   const page_input = document.getElementById("station_page");
   const answer = document.getElementById("answer");
@@ -64,6 +65,44 @@
           <td>${s.name.split(", ")[1]}</td>
           <td>${s.latitude}</td>
           <td>${s.longitude}</td>
+          </tr>`;
+        }
+        table += `</table>`;
+        answer.innerHTML = table;
+      });
+  });
+  z3_button.addEventListener("click", function () {
+    fetch(
+      `https://www.ncei.noaa.gov/cdo-web/api/v2/locations?offset=${page_input.value * 25}`,
+      {
+        headers: {
+          token: api_input.value,
+        },
+      },
+    )
+      .then((response) => response.json())
+      .then((array) => {
+        console.log(array);
+        if (array.status == "400") {
+          answer.innerHTML = JSON.stringify(array);
+          return;
+        }
+
+        let table = ` 
+          <table class="table"><tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>mindate</th>
+          <th>maxdate</th>
+          <th>datacoverage</th>
+          </tr>`;
+        for (s of array.results) {
+          table += `  <tr>
+          <td>${s.id}</td>
+          <td>${s.name}</td>
+          <td>${s.mindate}</td>
+          <td>${s.maxdate}</td>
+          <td>${s.datacoverage}</td>
           </tr>`;
         }
         table += `</table>`;
