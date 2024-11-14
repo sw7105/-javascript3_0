@@ -1,5 +1,8 @@
 (function () {
   const z1_button = document.getElementById("z1");
+  const z2_button = document.getElementById("z2");
+  const api_input = document.getElementById("api_key");
+  const page_input = document.getElementById("station_page");
   const answer = document.getElementById("answer");
 
   z1_button.addEventListener("click", function () {
@@ -29,15 +32,42 @@
       });
   });
 
-  cw1.addEventListener("click", function () {
-    //TODO
-  });
+  z2_button.addEventListener("click", function () {
+    fetch(
+      `https://www.ncei.noaa.gov/cdo-web/api/v2/stations?offset=${page_input.value * 25}`,
+      {
+        headers: {
+          token: api_input.value,
+        },
+      },
+    )
+      .then((response) => response.json())
+      .then((array) => {
+        console.log(array);
+        if (array.status == "400") {
+          answer.innerHTML = JSON.stringify(array);
+          return;
+        }
 
-  cw2.addEventListener("click", function () {
-    //TODO
-  });
-
-  cw3.addEventListener("click", function () {
-    //TODO
+        let table = ` 
+          <table class="table"><tr>
+          <th>Station ID</th>
+          <th>Name</th>
+          <th>State</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          </tr>`;
+        for (s of array.results) {
+          table += `  <tr>
+          <td>${s.id}</td>
+          <td>${s.name.split(", ")[0]}</td>
+          <td>${s.name.split(", ")[1]}</td>
+          <td>${s.latitude}</td>
+          <td>${s.longitude}</td>
+          </tr>`;
+        }
+        table += `</table>`;
+        answer.innerHTML = table;
+      });
   });
 })();
