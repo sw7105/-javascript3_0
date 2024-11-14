@@ -4,6 +4,7 @@
   const z3_button = document.getElementById("z3");
   const api_input = document.getElementById("api_key");
   const page_input = document.getElementById("station_page");
+  const limit_input = document.getElementById("station_limit");
   const answer = document.getElementById("answer");
 
   z1_button.addEventListener("click", function () {
@@ -35,7 +36,7 @@
 
   z2_button.addEventListener("click", function () {
     fetch(
-      `https://www.ncei.noaa.gov/cdo-web/api/v2/stations?offset=${page_input.value * 25}`,
+      `https://www.ncei.noaa.gov/cdo-web/api/v2/stations?offset=${page_input.value * limit_input.value}&limit=${limit_input.value}`,
       {
         headers: {
           token: api_input.value,
@@ -73,7 +74,7 @@
   });
   z3_button.addEventListener("click", function () {
     fetch(
-      `https://www.ncei.noaa.gov/cdo-web/api/v2/locations?offset=${page_input.value * 25}`,
+      `https://www.ncei.noaa.gov/cdo-web/api/v2/locations?offset=${page_input.value * limit_input.value}&limit=${limit_input.value}`,
       {
         headers: {
           token: api_input.value,
